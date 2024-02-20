@@ -20,11 +20,26 @@ def convert_heading(line):
         return line
 
 
+def convert_paragraph(lines):
+    return f'<p>\n    {lines}\n</p>'
+
+
 def markdown_to_html(markdown_lines):
-    """
-    to convert to html
-    """
-    html_lines = [convert_heading(line) for line in markdown_lines]
+    html_lines = []
+    paragraph_lines = []
+
+    for line in markdown_lines:
+        if line.strip() == "":
+            if paragraph_lines:
+                html_lines.append(convert_paragraph("<br />\n".
+                                  join(paragraph_lines)))
+                paragraph_lines = []
+        else:
+            paragraph_lines.append(line)
+
+    if paragraph_lines:
+        html_lines.append(convert_paragraph("<br />\n".join(paragraph_lines)))
+
     return '\n'.join(html_lines)
 
 
